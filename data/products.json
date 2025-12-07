@@ -1,0 +1,47 @@
+[
+  {
+    "id": "prod-001",
+    "name": "Wireless Bluetooth Headphones",
+    "description": "High-quality wireless headphones with noise cancellation",
+    "price": 79.99,
+    "currency": "USD",
+    "stock": 150,
+    "category": "Electronics"
+  },
+  {
+    "id": "prod-002",
+    "name": "USB-C Charging Cable",
+    "description": "Fast charging cable, 2 meters length",
+    "price": 12.99,
+    "currency": "USD",
+    "stock": 500,
+    "category": "Accessories"
+  },
+  {
+    "id": "prod-003",
+    "name": "Laptop Stand",
+    "description": "Ergonomic aluminum laptop stand",
+    "price": 45.00,
+    "currency": "USD",
+    "stock": 75,
+    "category": "Accessories"
+  },
+  {
+    "id": "prod-004",
+    "name": "Mechanical Keyboard",
+    "description": "RGB mechanical keyboard with blue switches",
+    "price": 89.99,
+    "currency": "USD",
+    "stock": 60,
+    "category": "Electronics"
+  },
+  {
+    "id": "prod-005",
+    "name": "Wireless Mouse",
+    "description": "Ergonomic wireless mouse with adjustable DPI",
+    "price": 29.99,
+    "currency": "USD",
+    "stock": 200,
+    "category": "Electronics"
+  }
+]

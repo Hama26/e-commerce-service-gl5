@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  ecommerce:
+    build: .
+    container_name: ecommerce-service
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - OMS_URL=http://oms:4000  # URL to OMS service when running in same network
+    volumes:
+      - ./data:/app/data  # Persist products data
+    restart: unless-stopped
+    networks:
+      - ecommerce-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  ecommerce-network:
+    driver: bridge
+    name: ecommerce-network
