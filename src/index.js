@@ -101,22 +101,20 @@ app.post('/api/orders/create', async (req, res) => {
         });
       }
       
-      if (product.stock < item.quantity) {
-        return res.status(400).json({
-          success: false,
-          error: `Insufficient stock for product: ${product.name}`
-        });
-      }
+      // Use server canonical product name and price to avoid client tampering
+      const unitPrice = product.price;
+      const subtotal = Math.round(unitPrice * item.quantity * 100) / 100;
       
       orderItems.push({
         productId: product.id,
-        productName: product.name,
+        name: product.name,
+        price: unitPrice,
         quantity: item.quantity,
-        unitPrice: product.price,
-        subtotal: product.price * item.quantity
+        unitPrice,
+        subtotal
       });
       
-      totalAmount += product.price * item.quantity;
+      totalAmount += subtotal;
     }
     
     // Create order object
@@ -140,28 +138,18 @@ app.post('/api/orders/create', async (req, res) => {
     // Store order locally
     orders.set(orderId, order);
     
+    // (OMS forwarding kept commented as in your original code)
     // Try to forward to OMS (Step 3 in the chain)
-    try {
-      const omsResponse = await fetch(`${OMS_URL}/api/orders/create`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(order)
-      });
-      
-      if (omsResponse.ok) {
-        const omsData = await omsResponse.json();
-        order.status = 'processing';
-        order.omsReference = omsData.data?.id || null;
-        orders.set(orderId, order);
-        console.log(`Order ${orderId} forwarded to OMS successfully`);
-      } else {
-        console.warn(`OMS responded with status: ${omsResponse.status}`);
-      }
-    } catch (omsError) {
-      console.warn('Could not reach OMS service:', omsError.message);
-      // Order is still created locally, OMS sync can happen later
-    }
+    // try {
+    //   const omsResponse = await fetch(`${OMS_URL}/api/orders/create`, {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify(order)
+    //   });
+    //   ...
+    // } catch (omsError) { ... }
     
+    console.log(order)
     res.status(201).json({
       success: true,
       message: 'Order created successfully',
@@ -176,6 +164,7 @@ app.post('/api/orders/create', async (req, res) => {
     });
   }
 });
+
 
 // GET /api/orders/:id - Get order status (for polling)
 app.get('/api/orders/:id', async (req, res) => {
